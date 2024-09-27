@@ -47,12 +47,12 @@ public class LanguageCodeConverter {
                 if (line.isEmpty()) {
                     continue;
                 }
-                String[] split = line.split("\\s");
-                if (split.length < 2) {
+                String[] parts = line.split("\\s");
+                if (parts.length < 2) {
                     continue;
                 }
-                String language = String.join(" ", java.util.Arrays.copyOf(split, split.length - 1));
-                String code = split[split.length - 1].trim();
+                String language = String.join(" ", java.util.Arrays.copyOf(parts, parts.length - 1));
+                String code = parts[parts.length - 1].trim();
 
                 codeToLanguage.put(code, language);
                 languageToCode.put(language, code);

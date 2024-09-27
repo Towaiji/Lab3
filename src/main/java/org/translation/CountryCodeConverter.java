@@ -36,15 +36,21 @@ public class CountryCodeConverter {
             List<String> lines = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
 
-            for (String line : lines) {
-                String[] parts = line.split("\\t");
-                if (parts.length >= 2) {
-                    String countryName = parts[0];
-                    String countryCode = parts[1];
+            boolean isFirstLine = true;
 
-                    // Populate the maps for both forward and reverse lookup
-                    codeToCountry.put(countryCode, countryName);
-                    countryToCode.put(countryName, countryCode);
+            for (String line : lines) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                String[] parts = line.split("\\t");
+                if (parts.length >= 4) {
+                    String countryName = parts[0].trim();
+                    String alpha3Code = parts[2].trim().toUpperCase();
+
+                    codeToCountry.put(alpha3Code, countryName);
+                    countryToCode.put(countryName.toLowerCase(), alpha3Code);
                 }
             }
         }
@@ -60,7 +66,7 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        return codeToCountry.getOrDefault(code, "Country not found");
+        return codeToCountry.getOrDefault(code.toUpperCase(), "Country not found");
     }
 
     /**
@@ -69,7 +75,7 @@ public class CountryCodeConverter {
      * @return the 3-letter code of the country
      */
     public String fromCountry(String country) {
-        return countryToCode.getOrDefault(country, "Code not found");
+        return countryToCode.getOrDefault(country.toLowerCase(), "Code not found");
     }
 
     /**
